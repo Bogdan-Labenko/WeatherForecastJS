@@ -1,0 +1,29 @@
+body{
+    background-color: #86B9E0 !important;
+	
+}
+html{
+	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif !important;
+}
+#locateBtn, #unitBtn {
+	background-color: #86B9E0;
+	border: 1px solid rgba(255,255,255,0.25);
+	border-radius: 50%;
+	color: #fff;
+	height: 40px;
+	width: 40px;
+	
+}
+.search{
+	width: 100%;
+	text-align: center;
+}
+.current{
+	float: left;
+	width: 100%;
+	text-align: center;
+	font-family: Verdana, Geneva, Tahoma, sans-serif !important;
+}
+#current_condition_img{
+	height: 150px;
+}
