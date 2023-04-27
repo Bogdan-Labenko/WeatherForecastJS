@@ -6,20 +6,144 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css" integrity="sha512-lbfoNVTzdb+pJbEuCInZ+bgbVVTL3a3Tp3TzTgOVX9mmZZyukmH+aLDLlRm7OZI+POne2hn85jKgEmIUEXy51Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Document</title>
 </head>
 <body>
-    <div class="current">
-        <input type="search" id="search" value="London">
-        <input type="submit" value="Search" onclick="setCurrentWeather()">
+    <div id="today">
+        <header>
+            <h1 id="title">My Weather</h1>
+            <div id="search_block">
+                <input type="search" id="search" value="London">
+                <input type="submit" value="Search" onclick="setTodayWeather()">
+            </div>
+        </header>
+        <div id="menu">
+            <button>Today</button>
+            <button>5-day forecast</button>
+        </div>
+        <main>
+            <div id="today_current_block">
+                <div id="current_title_block">
+                    <p id="current_title">CURRENT WEATHER</p>
+                    <p id="current_date">31.04.1331</p>
+                </div>
+                
+                <div id="info_block">
+                    <div id="icon_block">
+                        <img id="cur_cond_img" src="http://openweathermap.org/img/wn/02d@2x.png" alt="Sunny">
+                        <span id="cur_cond">Sunny</span>
+                    </div>
+                    <div id="temp_block">
+                        <p id="today_cur_temp" style="font-weight: bold; font-size: 35px;">29°C</p>
+                        <p id="today_cur_real_temp" style="font-size: 20px;">Real feel: 30°С</p>
+                    </div>
+                    <div id="sunrise_block">
+                        <p id="sunrise">Sunrise: 7:04 AM</p>
+                        <p id="sunset">Sunset: 5:11 PM</p>
+                        <p id="day_duration">Duration: 10:07 hr</p>
+                    </div>
+                </div>
+            </div>
+            <div id="today_hourly">
+                <div id="current_title_block">
+                    <p id="current_title">HOURLY</p>
+                </div>
+                <table id="today_hourly_table">
+                    <tr>
+                        <td><b>TODAY</b></td>
+                        <td>7pm</td>
+                        <td>8pm</td>
+                        <td>9pm</td>
+                        <td>10pm</td>
+                        <td>11pm</td>
+                        <td>12pm</td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td><img src="http://openweathermap.org/img/wn/02d.png" alt=""></td>
+                        <td><img src="http://openweathermap.org/img/wn/02d.png" alt=""></td>
+                        <td><img src="http://openweathermap.org/img/wn/02d.png" alt=""></td>
+                        <td><img src="http://openweathermap.org/img/wn/02d.png" alt=""></td>
+                        <td><img src="http://openweathermap.org/img/wn/02d.png" alt=""></td>
+                        <td><img src="http://openweathermap.org/img/wn/02d.png" alt=""></td>
+                    </tr>
+                    <tr>
+                        <td>Forecast</td>
+                        <td>Sunny</td>
+                        <td>Sunny</td>
+                        <td>Sunny</td>
+                        <td>Sunny</td>
+                        <td>Sunny</td>
+                        <td>Sunny</td>
+                    </tr>
+                    <tr>
+                        <td>Temp</td>
+                        <td>29°</td>
+                        <td>29°</td>
+                        <td>29°</td>
+                        <td>29°</td>
+                        <td>29°</td>
+                        <td>29°</td>
+                    </tr>
+                    <tr>
+                        <td>Real feel</td>
+                        <td>28°</td>
+                        <td>28°</td>
+                        <td>28°</td>
+                        <td>28°</td>
+                        <td>28°</td>
+                        <td>28°</td>
+                    </tr>
+                    <tr>
+                        <td>Wind (km/h)</td>
+                        <td>3.4</td>
+                        <td>7.8</td>
+                        <td>4.6</td>
+                        <td>3.4</td>
+                        <td>4.6</td>
+                        <td>3.4</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="today_nearby_places">
+                <div id="current_title_block">
+                    <span id="current_title">NEARBY PLACES</span>
+                </div>
+                <div id="nearby_places_block">
+                    <div id="nearby_place">
+                        <span>Kyiv</span>
+                        <img src="http://openweathermap.org/img/wn/03d.png" alt="">
+                        <span>36°C</span>
+                    </div>
+                    <div id="nearby_place">
+                        <span>Warsaw</span>
+                        <img src="http://openweathermap.org/img/wn/04d.png" alt="">
+                        <span>12°C</span>
+                    </div>
+                    <div id="nearby_place">
+                        <span>Lvov</span>
+                        <img src="http://openweathermap.org/img/wn/01d.png" alt="">
+                        <span>41°C</span>
+                    </div>
+                    <div id="nearby_place">
+                        <span>Melitopol</span>
+                        <img src="http://openweathermap.org/img/wn/01n.png" alt="">
+                        <span>-1°C</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- <div class="current">
+        
         <h1 id="city">City</h1>
         <img id="current_condition_img" alt="Sunny">
         <p id="temp">72</p>
         <i id="current_windy_img"></i>
         <p id="current_windy"></p>
         <p id="condition">Sunny</p>
-    </div>
+    </div> -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="main.js"></script>
 </body>

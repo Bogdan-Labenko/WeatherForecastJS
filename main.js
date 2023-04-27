@@ -1,22 +1,36 @@
 const apiOpenWeatherKey = '1de78154b55547fa6859a9d6b54352b3'
-const cur_city = document.querySelector('#city')
-const cur_temp = document.querySelector('#temp')
-const cur_condition = document.querySelector('#condition') 
-const cur_cond_img = document.querySelector('#current_condition_img')
-const cur_windy_img = document.querySelector('#current_windy_img')
-const cur_windy = document.querySelector('#current_windy')
+// const cur_city = document.querySelector('#current_date')
+// const cur_sunrise = document.querySelector('#sunrise')
+// const cur_sunset = document.querySelector('#sunset')
+// const day_duration = document.querySelector('#day_duration')
 
 async function getWeatherFromCity(cityName) {
     let apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${apiOpenWeatherKey}`;
-    return await fetch(apiUrl)
+    const current = await fetch(apiUrl)
     .then(response => response.json())
     .then(data => {
       return data;
     })
     .catch(error => console.error(error))
+    
+    let apiUrl1 = `https://api.openweathermap.org/data/2.5/forecast?q=${cityName}&appid=${apiOpenWeatherKey}&units=metric`
+    const hourly = await fetch(apiUrl1)
+      .then(response => response.json())
+      .then(data => {
+        return data;
+      })
+    let apiUrl2 = `https://api.openweathermap.org/data/2.5/find?lat=${current.coord.lat}&lon=${current.coord.lon}&cnt=5&appid=${apiOpenWeatherKey}&units=metric`
+    const nearby = await fetch(apiUrl2)
+      .then(response => response.json())
+      .then(data => {
+        data.list.shift()
+        data.count--
+        return data;
+      })
+    return { current, hourly, nearby }
 }
 async function getWeatherFromCords(lat, lon){
-    const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&windspeed_unit=ms`;
+    // const apiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&windspeed_unit=ms`;
     const apiUrl1 = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiOpenWeatherKey}`
     return await fetch(apiUrl1)
       .then(response => response.json())
@@ -25,7 +39,7 @@ async function getWeatherFromCords(lat, lon){
       })
       .catch(error => console.error(error))
 }
-async function setCurrentWeather(){
+async function setTodayWeather(){
     const temp = document.querySelector('#search')
     const city = temp.value;
     let data = await getWeatherFromCity(city)
@@ -33,48 +47,48 @@ async function setCurrentWeather(){
     updateInterface(data)
 }
 function updateInterface(data){
+  const current = data.current
+  const hourly = data.hourly
+  const nearby = data.nearby
+  
+  current_date.innerHTML = new Date(current.dt * 1000).toDateString()
+  let sunrise_time = new Date(current.sys.sunrise * 1000).toLocaleTimeString()
+  let sunset_time = new Date(current.sys.sunset * 1000).toLocaleTimeString() 
+  
+  //Current
+  sunrise.innerHTML = 'Sunrise: ' + sunrise_time
+  sunset.innerHTML = 'Sunset: ' + sunset_time
+  day_duration.innerHTML = 'Duration: ' + new Date((current.sys.sunset - current.sys.sunrise) * 1000).toLocaleTimeString()
+  today_cur_temp.innerHTML = Math.round(current.main.temp) + '°C'
+  today_cur_real_temp.innerHTML = 'Real feel: ' + Math.round(current.main.feels_like) + '°C'
+  cur_cond_img.src = `http://openweathermap.org/img/wn/${current.weather[0].icon}@2x.png`
+  cur_cond.innerHTML = current.weather[0].description
 
-  cur_city.innerHTML = data.name
-  cur_temp.innerHTML = Math.round(data.main.temp) + '°С'
-  cur_cond_img.src = `http://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png`
-
-  cur_windy.innerHTML = data.wind.speed + ' km/h'
-  cur_condition.innerHTML = data.weather[0].description
-
-  // const windDirection = data.wind.deg
-  // let iconClass = 'wi wi-wind towards-';
-  // if (windDirection >= 348.75 || windDirection < 11.25) {
-  //   iconClass += 'n';
-  // } else if (windDirection >= 11.25 && windDirection < 33.75) {
-  //   iconClass += 'nne';
-  // } else if (windDirection >= 33.75 && windDirection < 56.25) {
-  //   iconClass += 'ne';
-  // } else if (windDirection >= 56.25 && windDirection < 78.75) {
-  //   iconClass += 'ene';
-  // } else if (windDirection >= 78.75 && windDirection < 101.25) {
-  //   iconClass += 'e';
-  // } else if (windDirection >= 101.25 && windDirection < 123.75) {
-  //   iconClass += 'ese';
-  // } else if (windDirection >= 123.75 && windDirection < 146.25) {
-  //   iconClass += 'se';
-  // } else if (windDirection >= 146.25 && windDirection < 168.75) {
-  //   iconClass += 'sse';
-  // } else if (windDirection >= 168.75 && windDirection < 191.25) {
-  //   iconClass += 's';
-  // } else if (windDirection >= 191.25 && windDirection < 213.75) {
-  //   iconClass += 'ssw';
-  // } else if (windDirection >= 213.75 && windDirection < 236.25) {
-  //   iconClass += 'sw';
-  // } else if (windDirection >= 236.25 && windDirection < 258.75) {
-  //   iconClass += 'wsw';
-  // } else if (windDirection >= 258.75 && windDirection < 281.25) {
-  //   iconClass += 'w';
-  // } else if (windDirection >= 281.25 && windDirection < 303.75) {
-  //   iconClass += 'wnw';
-  // } else if (windDirection >= 303.75 && windDirection < 326.25) {
-  //   iconClass += 'nw';
-  // } else if (windDirection >= 326.25 && windDirection < 348.75) {
-  //   iconClass += 'nnw';
-  // }
-  // cur_windy_img.className = iconClass;
+  //Hourly
+  let hours_row = today_hourly_table.rows[0]
+  let icons_row = today_hourly_table.rows[1]
+  let cond_row = today_hourly_table.rows[2]
+  let temp_row = today_hourly_table.rows[3]
+  let real_temp_row = today_hourly_table.rows[4]
+  let wind_row = today_hourly_table.rows[5]
+  for (let index = 0; index <= 5; index++) {
+    const element = hourly.list[index];
+    let time = new Date(element.dt).toLocaleTimeString()
+    hours_row.cells[index+1].innerHTML = element.dt_txt.slice(-8)
+    icons_row.cells[index+1].querySelector('img').src = `http://openweathermap.org/img/wn/${element.weather[0].icon}.png`
+    cond_row.cells[index+1].innerHTML = element.weather[0].description
+    temp_row.cells[index+1].innerHTML = Math.round(element.main.temp) + ' °C'
+    real_temp_row.cells[index+1].innerHTML = Math.round(element.main.feels_like) + ' °C'
+    wind_row.cells[index+1].innerHTML = element.wind.speed
+  }
+  //Nearby
+  let places = document.querySelectorAll('#today_nearby_places #nearby_place')
+  for (let index = 0; index < places.length; index++) {
+    const element = places[index];
+    element.innerHTML = `<span>${nearby.list[index].name}</span>
+    <img src="http://openweathermap.org/img/wn/${nearby.list[index].weather[0].icon}.png" alt="">
+    <span>${Math.round(nearby.list[index].main.temp)}°C</span>`
+  }
 }
+
+setTodayWeather('London')
