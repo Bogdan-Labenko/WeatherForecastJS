@@ -18,12 +18,15 @@ html{
 	display: inline;
 	font-weight: bold;
 	color: #52b3b5;
+	height: 50px;
+	float: left;
 }
 #search_block{
 	float: right;
 	margin: 15px;
 }
 header{
+	height: 60px;
 	background-color: #d6d6d6;
 	padding-bottom: 15px;
 	padding-left: 25px;
