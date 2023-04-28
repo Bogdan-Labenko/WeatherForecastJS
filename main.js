@@ -4,7 +4,8 @@ const apiOpenWeatherKey = '1de78154b55547fa6859a9d6b54352b3'
 // const cur_sunset = document.querySelector('#sunset')
 // const day_duration = document.querySelector('#day_duration')
 
-async function getWeatherFromCity(cityName) {
+//TODAY
+async function getTodayWeatherFromCity(cityName) {
     let apiUrl = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${apiOpenWeatherKey}`;
     const current = await fetch(apiUrl)
     .then(response => response.json())
@@ -42,11 +43,10 @@ async function getWeatherFromCords(lat, lon){
 async function setTodayWeather(){
     const temp = document.querySelector('#search')
     const city = temp.value;
-    let data = await getWeatherFromCity(city)
-    console.log(data);
-    updateInterface(data)
+    let data = await getTodayWeatherFromCity(city)
+    updateTodayInterface(data)
 }
-function updateInterface(data){
+function updateTodayInterface(data){
   const current = data.current
   const hourly = data.hourly
   const nearby = data.nearby
@@ -89,6 +89,36 @@ function updateInterface(data){
     <img src="http://openweathermap.org/img/wn/${nearby.list[index].weather[0].icon}.png" alt="">
     <span>${Math.round(nearby.list[index].main.temp)}°C</span>`
   }
+}
+//5 Days forecast
+async function set5DayForecast(){
+  const temp = document.querySelector('#search')
+  const city = temp.value;
+  let data = await get5DaysForecastFromCity(city)
+  console.log(data);
+  update5DaysInterface(data)
+}
+async function get5DaysForecastFromCity(city){
+  let apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiOpenWeatherKey}}`
+  return await fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        return data;
+      })
+      .catch(error => console.error(error))
+}
+function update5DaysInterface(data){
+  
+}
+function showToday(){
+  setTodayWeather()
+  five_days_block.style.display = 'none'
+  today.style.display = 'block'
+}
+function show5Days(){
+  set5DayForecast()
+  five_days_block.style.display = 'block'
+  today.style.display = 'none'
 }
 
 setTodayWeather('London')
