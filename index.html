@@ -9,18 +9,18 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="today">
-        <header>
-            <h1 id="title">My Weather</h1>
-            <div id="search_block">
-                <input type="search" id="search" value="London">
-                <input type="submit" value="Search" onclick="setTodayWeather()">
-            </div>
-        </header>
-        <div id="menu">
-            <button>Today</button>
-            <button>5-day forecast</button>
+    <header>
+        <h1 id="title">My Weather</h1>
+        <div id="search_block">
+            <input type="search" id="search" value="London">
+            <input type="submit" value="Search" onclick="setTodayWeather()">
         </div>
+    </header>
+    <div id="menu">
+        <button onclick="showToday()">Today</button>
+        <button onclick="show5Days()">5-day forecast</button>
+    </div>
+    <div id="today">
         <main>
             <div id="today_current_block">
                 <div id="current_title_block">
@@ -134,16 +134,107 @@
             </div>
         </main>
     </div>
-    
-    <!-- <div class="current">
-        
-        <h1 id="city">City</h1>
-        <img id="current_condition_img" alt="Sunny">
-        <p id="temp">72</p>
-        <i id="current_windy_img"></i>
-        <p id="current_windy"></p>
-        <p id="condition">Sunny</p>
-    </div> -->
+    <div id="five_days_block" style="display: none;">
+        <div id="five_days">
+            <div id="day_card">
+                <h3 id="card_title">TONIGHT</h3>
+                <p>JUN 30</p>
+                <img src="http://openweathermap.org/img/wn/01d.png" alt="icon"><br>
+                <b style="font-size: 20px;">25°C</b>
+                <p>Clear, Warm</p>
+            </div>
+            <div id="day_card" class="selected">
+                <h3 id="card_title">TONIGHT</h3>
+                <p>JUN 30</p>
+                <img src="http://openweathermap.org/img/wn/01d.png" alt="icon"><br>
+                <b style="font-size: 20px;">25°C</b>
+                <p>Clear, Warm</p>
+            </div>
+            <div id="day_card">
+                <h3 id="card_title">TONIGHT</h3>
+                <p>JUN 30</p>
+                <img src="http://openweathermap.org/img/wn/01d.png" alt="icon"><br>
+                <b style="font-size: 20px;">25°C</b>
+                <p>Clear, Warm</p>
+            </div>
+            <div id="day_card">
+                <h3 id="card_title">TONIGHT</h3>
+                <p>JUN 30</p>
+                <img src="http://openweathermap.org/img/wn/01d.png" alt="icon"><br>
+                <b style="font-size: 20px;">25°C</b>
+                <p>Clear, Warm</p>
+            </div>
+            <div id="day_card">
+                <h3 id="card_title">TONIGHT</h3>
+                <p>JUN 30</p>
+                <img src="http://openweathermap.org/img/wn/01d.png" alt="icon"><br>
+                <b style="font-size: 20px;">25°C</b>
+                <p>Clear, Warm</p>
+            </div>
+        </div>
+        <div id="five_days_hourly">
+            <div id="current_title_block">
+                <p id="current_title">HOURLY</p>
+            </div>
+            <table id="five_days_hourly_table">
+                <tr>
+                    <td><b>TODAY</b></td>
+                    <td>7pm</td>
+                    <td>8pm</td>
+                    <td>9pm</td>
+                    <td>10pm</td>
+                    <td>11pm</td>
+                    <td>12pm</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><img src="http://openweathermap.org/img/wn/02d.png" alt=""></td>
+                    <td><img src="http://openweathermap.org/img/wn/02d.png" alt=""></td>
+                    <td><img src="http://openweathermap.org/img/wn/02d.png" alt=""></td>
+                    <td><img src="http://openweathermap.org/img/wn/02d.png" alt=""></td>
+                    <td><img src="http://openweathermap.org/img/wn/02d.png" alt=""></td>
+                    <td><img src="http://openweathermap.org/img/wn/02d.png" alt=""></td>
+                </tr>
+                <tr>
+                    <td>Forecast</td>
+                    <td>Sunny</td>
+                    <td>Sunny</td>
+                    <td>Sunny</td>
+                    <td>Sunny</td>
+                    <td>Sunny</td>
+                    <td>Sunny</td>
+                </tr>
+                <tr>
+                    <td>Temp</td>
+                    <td>29°</td>
+                    <td>29°</td>
+                    <td>29°</td>
+                    <td>29°</td>
+                    <td>29°</td>
+                    <td>29°</td>
+                </tr>
+                <tr>
+                    <td>Real feel</td>
+                    <td>28°</td>
+                    <td>28°</td>
+                    <td>28°</td>
+                    <td>28°</td>
+                    <td>28°</td>
+                    <td>28°</td>
+                </tr>
+                <tr>
+                    <td>Wind (km/h)</td>
+                    <td>3.4</td>
+                    <td>7.8</td>
+                    <td>4.6</td>
+                    <td>3.4</td>
+                    <td>4.6</td>
+                    <td>3.4</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="main.js"></script>
 </body>

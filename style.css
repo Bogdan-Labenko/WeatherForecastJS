@@ -120,3 +120,39 @@ main{
 	justify-content: space-around;
 	margin-top: 20px;
 }
+#five_days{
+	/* width: 100%; */
+	flex-direction: row;
+	display: flex;
+	margin: 30px;
+	background-color: #e2e2e2;
+	height: fit-content;
+}
+#day_card{
+	/* float: left; */
+	display: inline-block;
+	
+	width: 20%;
+	background-color: #e0e0e0;
+	padding: 15px;
+	border-left: 1px solid #b5b5b5;
+	border-right: 1px solid #b5b5b5;
+}
+#five_days_hourly{
+	margin: 30px;
+	background-color: #e2e2e2;
+	height: 55%;
+	padding-bottom: 30px;
+}
+#five_days_hourly table{
+	width: 100%;
+}
+#five_days_hourly table td{
+	padding: 10px;
+}
+#five_days_hourly table tr:not(:nth-child(-n+2)){
+	border-bottom: 1px solid #eeeeee;
+}
+.selected{
+	background-color: #d6d6d6 !important;
+}
