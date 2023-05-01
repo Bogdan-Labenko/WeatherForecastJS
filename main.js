@@ -95,30 +95,127 @@ async function set5DayForecast(){
   const temp = document.querySelector('#search')
   const city = temp.value;
   let data = await get5DaysForecastFromCity(city)
-  console.log(data);
   update5DaysInterface(data)
 }
 async function get5DaysForecastFromCity(city){
-  let apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiOpenWeatherKey}}`
+  let apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiOpenWeatherKey}&units=metric`
   return await fetch(apiUrl)
       .then(response => response.json())
       .then(data => {
+        console.log(data);
         return data;
       })
       .catch(error => console.error(error))
 }
+var forecast = {}
 function update5DaysInterface(data){
+  console.log(data);
+  const iconFrequencyByDate = {};
+  const descriptionFrequenceByDate = {};
+  data.list.forEach(obj => {
+    // извлекаем дату из свойства dt_txt, игнорируя время
+    const date = obj.dt_txt.split(' ')[0];
   
+    // проверяем, есть ли уже объект для этой даты в нашем объекте iconFrequencyByDate
+    if (!(date in iconFrequencyByDate)) {
+      // если нет, создаем его
+      iconFrequencyByDate[date] = {};
+    }
+    if (!(date in descriptionFrequenceByDate)) {
+      // если нет, создаем его
+      descriptionFrequenceByDate[date] = {};
+    }
+  
+    // извлекаем иконку из свойства icon в первом объекте в массиве weather
+    const icon = obj.weather[0].icon;
+    const main = obj.weather[0].main;
+  
+    // проверяем, есть ли уже запись для этой иконки в объекте для данной даты
+    if (!(icon in iconFrequencyByDate[date])) {
+      // если нет, создаем ее и инициализируем значением 1
+      iconFrequencyByDate[date][icon] = 1;
+    } else {
+      // если есть, увеличиваем количество повторений на 1
+      iconFrequencyByDate[date][icon]++;
+    }
+    if (!(main in descriptionFrequenceByDate[date])) {
+      descriptionFrequenceByDate[date][main] = 1;
+    } else {
+      descriptionFrequenceByDate[date][main]++;
+    }
+  })
+  forecast = {}
+  data.list.forEach(item => {
+    const date = item.dt_txt.split(' ')[0];
+    const time = item.dt_txt.split(' ')[1];
+    if (!forecast[date]) {
+      forecast[date] = { temperatures: [], hourly: [], icon: {}, description: {} };
+    }
+    forecast[date].temperatures.push(item.main.temp);
+    forecast[date].hourly.push({ time, temperature: item.main.temp, icon: item.weather[0].icon, feels_like: item.main.feels_like, wind: item.wind.speed, description: item.weather[0].description });
+    forecast[date].icon = Object.keys(iconFrequencyByDate[date]).reduce((a, b) => iconFrequencyByDate[date][a] > iconFrequencyByDate[date][b] ? a : b)
+    forecast[date].description = Object.keys(descriptionFrequenceByDate[date]).reduce((a, b) => descriptionFrequenceByDate[date][a] > descriptionFrequenceByDate[date][b] ? a : b)
+  });
+  blocks = document.querySelectorAll('#day_card')
+  console.log(forecast)
+  let i = 0;
+  Object.keys(forecast).forEach(date => {
+    if(i > 4) return;
+    const temperatures = forecast[date].temperatures;
+    blocks[i].querySelector('b').innerHTML = Math.round((temperatures.reduce((sum, temp) => sum + temp, 0) / temperatures.length)) + ' °C';
+    blocks[i].querySelector('h3').innerHTML = new Date(date).toLocaleDateString('en-US', {weekday: 'long'})
+    blocks[i].querySelector('img').src = `http://openweathermap.org/img/wn/${forecast[date].icon}.png`;
+    blocks[i].querySelector('#descript').innerHTML = forecast[date].description
+    blocks[i].querySelector('#date').innerHTML = date
+    if(i == 1)
+    {
+      blocks[i].querySelectorAll('#day_card').forEach(card => card.className = '')
+      blocks[i].classList.add('selected')
+      setHourly5DayForecast(forecast[date].hourly);
+    } 
+    i++;
+  });
+}
+function setHourly5DayForecast(hourly){
+      let hours_row = five_days_hourly_table.rows[0]
+      let icons_row = five_days_hourly_table.rows[1]
+      let cond_row = five_days_hourly_table.rows[2]
+      let temp_row = five_days_hourly_table.rows[3]
+      let real_temp_row = five_days_hourly_table.rows[4]
+      let wind_row = five_days_hourly_table.rows[5]
+      for (let index = 0; index <= 5; index++) {
+        const element = hourly[index];
+        console.log(element);
+        hours_row.cells[index+1].innerHTML = element.time
+        icons_row.cells[index+1].querySelector('img').src = `http://openweathermap.org/img/wn/${element.icon}.png`
+        cond_row.cells[index+1].innerHTML = element.description
+        temp_row.cells[index+1].innerHTML = Math.round(element.temperature) + ' °C'
+        real_temp_row.cells[index+1].innerHTML = Math.round(element.feels_like) + ' °C'
+        wind_row.cells[index+1].innerHTML = element.wind
+      }
+}
+
+function setWeather(){
+  if(five_days_block.style.display == 'none') showToday()
+  else show5Days()
 }
 function showToday(){
-  setTodayWeather()
   five_days_block.style.display = 'none'
   today.style.display = 'block'
+  setTodayWeather()
 }
 function show5Days(){
-  set5DayForecast()
   five_days_block.style.display = 'block'
   today.style.display = 'none'
+  set5DayForecast()
 }
+
+five_days.querySelectorAll('#day_card').forEach(card => {
+  card.addEventListener('click', () => {
+    five_days.querySelectorAll('#day_card').forEach(card => card.className = '')
+    card.classList.add('selected')
+    setHourly5DayForecast(forecast[card.querySelector('#date').innerHTML].hourly)
+  });
+});
 
 setTodayWeather('London')
